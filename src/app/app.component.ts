@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { ImageVariant } from './models/image.model';
 import { MarvelService } from './services/marvel.service';
 
 @Component({
@@ -10,6 +11,10 @@ export class AppComponent {
   characters: any[] = [];
 
   constructor(private marvelService: MarvelService) { }
+
+  getImage(character: any) {
+    return this.marvelService.getImage(character.thumbnail, ImageVariant.standard_xlarge);
+  }
 
   ngOnInit(): void {
     this.marvelService.getCharacters().subscribe(response => {
