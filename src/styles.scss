@@ -1,1 +1,45 @@
 /* You can add global styles to this file, and also import other style files */
+@import "./assets/scss/variables.scss";
+
+.card {
+    cursor: pointer;
+    border-radius: $border-radius;
+    border: none;
+    overflow: hidden;
+
+    .card-body {
+        padding-bottom: 0;
+
+        .card-title {
+            font-size: 1.05rem;
+        }
+    }
+    .card-image-top {
+        border: none;
+        border-radius: $border-radius;
+        margin: -3px;
+    }
+    .card-img,
+    .card-img-overlay {
+        border: none;
+        border-radius: $border-radius;
+        background: linear-gradient(-0deg, rgba(0, 0, 0, 0.9) 0%, rgba(255, 255, 255, 0.1) 50%);
+        display: flex;
+        align-items: flex-end;
+    }
+    .card-img-overlay {
+        padding: 0.75rem;
+        .card-title {
+            font-size: 1.05rem;
+            margin: 0;
+        }
+    }
+    .card-img {
+        transition: transform .2s; /* Animation */
+    }
+    &:hover {
+        .card-img {
+            transform: scale(1.25);
+        }
+    }
+}

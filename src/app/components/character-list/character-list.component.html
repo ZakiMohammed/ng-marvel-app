@@ -1,0 +1,10 @@
+<div class="row">
+    <div *ngFor="let character of characters" class="col-6 col-sm-2 mb-3">
+        <div class="card bg-dark text-white" (click)="onCharacterClick(character)">
+            <img [src]="getImage(character)" class="card-img">
+            <div class="card-img-overlay">
+                <h5 class="card-title">{{character.name}}</h5>
+            </div>
+        </div>
+    </div>
+</div>
