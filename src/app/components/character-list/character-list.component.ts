@@ -14,10 +14,11 @@ import { concatMap, debounceTime, distinctUntilChanged, switchMap } from 'rxjs/o
 export class CharacterListComponent implements OnInit {
 
   characters: any[] = [];
-  character: any;
   total = 0;
+  notFound = false;
+  initialLoad = true;
   options: MarvelRequestOptions = {
-    limit: 100,
+    limit: 50,
     offset: 0
   };
   faSearch = faSearch;
@@ -46,6 +47,7 @@ export class CharacterListComponent implements OnInit {
         this.characters = [...this.characters, ...data.results];
         this.total = data.total;
         this.options.offset = this.options.offset === 0 ? data.offset : this.options.offset;
+        this.initialLoad = false;
       });
   }
 
@@ -57,11 +59,12 @@ export class CharacterListComponent implements OnInit {
         this.characters = data.results;
         this.total = data.total;
         this.options.offset = this.options.offset === 0 ? data.offset : this.options.offset;
+        this.notFound = data.results.length ? false : true;
       });
   }
 
   onScroll() {
-    if (this.options.offset < this.total) {
+    if (this.options.offset + this.options.limit < this.total) {
       this.options.offset += this.options.limit;
       this.scroll$.next(this.options.offset);
     }
@@ -69,10 +72,20 @@ export class CharacterListComponent implements OnInit {
 
   onSearch($event: any) {
     const searchText = $event && $event.target && $event.target.value;
-    this.options.nameStartsWith = searchText;
-    this.characters = [];
-    this.total = 0;
-    this.searchText$.next(searchText);
+    if (searchText !== this.options.nameStartsWith) {
+      if (searchText) {
+        this.options.nameStartsWith = searchText;
+      } else {
+        this.options = {
+          limit: 50,
+          offset: 0
+        };
+      }
+      this.characters = [];
+      this.total = 0;
+      this.notFound = false;
+      this.searchText$.next(searchText);
+    }
   }
 
 }

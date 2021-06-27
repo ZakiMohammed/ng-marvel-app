@@ -1,21 +1,30 @@
 <!-- search -->
 <div class="row">
     <div class="col">
-        <div class="input-group mb-3">
+        <div class="input-group input-group-lg mb-3">
             <span class="input-group-text" id="searchIcon">
                 <fa-icon class="text-primary" [icon]="faSearch"></fa-icon>
             </span>
-            <input type="text" class="form-control" placeholder="Search your favorite character"
-                aria-label="Search your favorite character" aria-describedby="searchIcon" (keyup)="onSearch($event)">
+            <input type="text" class="form-control" placeholder="Search character" aria-label="Search character"
+                aria-describedby="searchIcon" (keyup)="onSearch($event)" [disabled]="initialLoad">
         </div>
     </div>
 </div>
 
+<!-- not found -->
+<div class="row" *ngIf="notFound">
+    <div class="col">
+        <p class="text-center text-muted text">Not Found</p>
+    </div>
+</div>
+
 <!-- loader -->
-<div class="row" *ngIf="!characters.length">
-    <div class="text-center">
-        <div class="spinner-border text-primary" role="status">
-            <span class="visually-hidden">Loading...</span>
+<div class="row" *ngIf="!characters.length && !notFound">
+    <div class="col">
+        <div class="text-center">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
         </div>
     </div>
 </div>
