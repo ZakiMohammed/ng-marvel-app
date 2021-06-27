@@ -4,6 +4,8 @@ import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { ImageThumbnail, ImageVariant } from '../models/image.model';
+import { MarvelRequestOptions } from '../models/request.model';
+import { MarvelData, MarvelResponse } from '../models/response.model';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +15,7 @@ export class MarvelService {
   private url: string = environment.apiUrl;
   private apiKey: string = environment.apiKey;
 
-  private characters: any;
+  private dataCharacter?: MarvelData;
 
   constructor(private http: HttpClient) {
   }
@@ -22,14 +24,29 @@ export class MarvelService {
     return `${thumbnail.path}/${variant}.${thumbnail.extension}`;
   }
 
-  getCharacters(): Observable<any> {
-    if (!this.characters) {
-      const url = `${this.url}characters?limit=50&apikey=${this.apiKey}`;
-      return this.http.get<any>(url).pipe(map(response => {
-        this.characters = response.data.results;
-        return this.characters;
+  getCharacters(options?: MarvelRequestOptions): Observable<MarvelData> {
+    if (this.dataCharacter && options?.offset === 0) {
+      return of(this.dataCharacter);
+    } else {
+      let url = `${this.url}characters?apikey=${this.apiKey}`;
+      if (options) {
+        Object.entries(options).forEach(([key, value]) => url += `&${key}=${value}`);
+      }
+      return this.http.get<MarvelResponse>(url).pipe(map(response => {
+        if (response.status === 'Ok') {
+          if (this.dataCharacter) {
+            this.dataCharacter = {
+              ...response.data,
+              results: [...this.dataCharacter.results, ...response.data.results]
+            };
+          } else {
+            this.dataCharacter = response.data;
+          }
+          return response.data;
+        } else {
+          throw new Error('Something went wrong');
+        }
       }));
     }
-    return of(this.characters);
   }
 }
