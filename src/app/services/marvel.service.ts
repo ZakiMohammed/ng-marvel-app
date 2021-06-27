@@ -25,28 +25,16 @@ export class MarvelService {
   }
 
   getCharacters(options?: MarvelRequestOptions): Observable<MarvelData> {
-    if (this.dataCharacter && options?.offset === 0) {
-      return of(this.dataCharacter);
-    } else {
-      let url = `${this.url}characters?apikey=${this.apiKey}`;
-      if (options) {
-        Object.entries(options).forEach(([key, value]) => url += `&${key}=${value}`);
-      }
-      return this.http.get<MarvelResponse>(url).pipe(map(response => {
-        if (response.status === 'Ok') {
-          if (this.dataCharacter) {
-            this.dataCharacter = {
-              ...response.data,
-              results: [...this.dataCharacter.results, ...response.data.results]
-            };
-          } else {
-            this.dataCharacter = response.data;
-          }
-          return response.data;
-        } else {
-          throw new Error('Something went wrong');
-        }
-      }));
+    let url = `${this.url}characters?apikey=${this.apiKey}`;
+    if (options) {
+      Object.entries(options).forEach(([key, value]) => url += `&${key}=${value}`);
     }
+    return this.http.get<MarvelResponse>(url).pipe(map(response => {
+      if (response.status === 'Ok') {
+        return response.data;
+      } else {
+        throw new Error('Something went wrong');
+      }
+    }));
   }
 }
