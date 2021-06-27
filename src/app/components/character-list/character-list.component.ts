@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { ImageVariant } from 'src/app/models/image.model';
 import { MarvelRequestOptions } from 'src/app/models/request.model';
 import { MarvelService } from 'src/app/services/marvel.service';
@@ -6,22 +6,26 @@ import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { Observable, Subject } from 'rxjs';
 import { concatMap, debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 
+declare let bootstrap: any;
+
 @Component({
   selector: 'app-character-list',
   templateUrl: './character-list.component.html',
   styleUrls: ['./character-list.component.scss']
 })
-export class CharacterListComponent implements OnInit {
+export class CharacterListComponent implements OnInit, AfterViewInit {
 
   characters: any[] = [];
+  character: any;
   total = 0;
   notFound = false;
   initialLoad = true;
+  faSearch = faSearch;
+  offcanvas: any;
   options: MarvelRequestOptions = {
     limit: 50,
     offset: 0
   };
-  faSearch = faSearch;
 
   searchText$ = new Subject<string>();
   scroll$ = new Subject<number>();
@@ -33,6 +37,10 @@ export class CharacterListComponent implements OnInit {
     this.searchCharacters(this.searchText$);
 
     this.scroll$.next();
+  }
+
+  ngAfterViewInit(): void {
+    this.offcanvas = new bootstrap.Offcanvas(document.getElementById('viewOffcanvas'));
   }
 
   getImage(character: any) {
@@ -85,6 +93,13 @@ export class CharacterListComponent implements OnInit {
       this.total = 0;
       this.notFound = false;
       this.searchText$.next(searchText);
+    }
+  }
+
+  onCharacterClick(character: any) {
+    this.character = character;
+    if (this.offcanvas) {
+      this.offcanvas.show();
     }
   }
 
