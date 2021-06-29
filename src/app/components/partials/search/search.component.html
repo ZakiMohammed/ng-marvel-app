@@ -1,0 +1,11 @@
+<div class="row">
+    <div class="col">
+        <div class="input-group input-group-lg mb-3">
+            <span class="input-group-text" id="searchIcon">
+                <fa-icon class="text-primary" [icon]="faSearch"></fa-icon>
+            </span>
+            <input type="text" class="form-control" placeholder="Search character" aria-label="Search character"
+                aria-describedby="searchIcon" (keyup)="onSearch($event)">
+        </div>
+    </div>
+</div>

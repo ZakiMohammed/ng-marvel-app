@@ -2,7 +2,6 @@ import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { ImageVariant } from 'src/app/models/image.model';
 import { MarvelRequestOptions } from 'src/app/models/request.model';
 import { MarvelService } from 'src/app/services/marvel.service';
-import { faSearch, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { Observable, Subject } from 'rxjs';
 import { concatMap, debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 
@@ -19,11 +18,6 @@ export class CharacterListComponent implements OnInit, AfterViewInit {
   character: any;
   total = 0;
   notFound = false;
-  initialLoad = true;
-  fa = {
-    faSearch: faSearch,
-    faTimes: faTimes,
-  };
   offCanvas: any;
   options: MarvelRequestOptions = {
     limit: 50,
@@ -57,24 +51,14 @@ export class CharacterListComponent implements OnInit, AfterViewInit {
       concatMap(offset => {
         this.options.offset = offset;
         return this.marvelService.getCharacters(this.options);
-      })).subscribe(data => {
-        this.characters = [...this.characters, ...data.results];
-        this.total = data.total;
-        this.options.offset = this.options.offset === 0 ? data.offset : this.options.offset;
-        this.initialLoad = false;
-      });
+      })).subscribe(data => this.handleResponse(data));
   }
 
   searchCharacters(text: Observable<string>) {
     text.pipe(
       debounceTime(400),
       distinctUntilChanged(),
-      switchMap(() => this.marvelService.getCharacters(this.options))).subscribe(data => {
-        this.characters = data.results;
-        this.total = data.total;
-        this.options.offset = this.options.offset === 0 ? data.offset : this.options.offset;
-        this.notFound = data.results.length ? false : true;
-      });
+      switchMap(() => this.marvelService.getCharacters(this.options))).subscribe(data => this.handleResponse(data, true));
   }
 
   onScroll() {
@@ -84,8 +68,7 @@ export class CharacterListComponent implements OnInit, AfterViewInit {
     }
   }
 
-  onSearch($event: any) {
-    const searchText = $event && $event.target && $event.target.value;
+  onSearch(searchText: string) {
     if (searchText !== this.options.nameStartsWith) {
       if (searchText) {
         this.options.nameStartsWith = searchText;
@@ -111,6 +94,13 @@ export class CharacterListComponent implements OnInit, AfterViewInit {
       }
       this.offCanvas.show();
     }
+  }
+
+  handleResponse(data: any, reset: boolean = false) {
+    this.characters = reset ? data.results : [...this.characters, ...data.results];
+    this.total = data.total;
+    this.options.offset = this.options.offset || data.offset;
+    this.notFound = !!!data.results.length;
   }
 
 }

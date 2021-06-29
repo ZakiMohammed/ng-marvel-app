@@ -11,6 +11,11 @@ import { HeaderComponent } from './components/partials/header/header.component';
 import { FooterComponent } from './components/partials/footer/footer.component';
 import { BannerComponent } from './components/partials/banner/banner.component';
 import { AboutComponent } from './components/about/about.component';
+import { NotFoundComponent } from './components/partials/not-found/not-found.component';
+import { LoaderComponent } from './components/partials/loader/loader.component';
+import { SearchComponent } from './components/partials/search/search.component';
+import { ListComponent } from './components/partials/list/list.component';
+import { ListGroupComponent } from './components/partials/list-group/list-group.component';
 
 @NgModule({
   declarations: [
@@ -20,6 +25,11 @@ import { AboutComponent } from './components/about/about.component';
     FooterComponent,
     BannerComponent,
     AboutComponent,
+    NotFoundComponent,
+    LoaderComponent,
+    SearchComponent,
+    ListComponent,
+    ListGroupComponent,
   ],
   imports: [
     BrowserModule,

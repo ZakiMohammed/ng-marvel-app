@@ -1,0 +1,11 @@
+<div class="mb-4" *ngIf="items.length">
+    <h6>{{title}} <span class="badge bg-dark text-white float-end">{{items.length}}</span></h6>
+    <ul class="list-group">
+        <ng-container *ngIf="!isLink" >
+            <li *ngFor="let item of items" class="list-group-item">{{item[key]}}</li>
+        </ng-container>
+        <ng-container *ngIf="isLink" >
+            <a *ngFor="let item of items" class="list-group-item" [href]="item[link]" target="_blank">{{item[key]}}</a>
+        </ng-container>
+    </ul>
+</div>

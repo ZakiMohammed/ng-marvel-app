@@ -15,8 +15,6 @@ export class MarvelService {
   private url: string = environment.apiUrl;
   private apiKey: string = environment.apiKey;
 
-  private dataCharacter?: MarvelData;
-
   constructor(private http: HttpClient) {
   }
 

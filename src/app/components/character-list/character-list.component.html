@@ -1,45 +1,14 @@
 <!-- search -->
-<div class="row">
-    <div class="col">
-        <div class="input-group input-group-lg mb-3">
-            <span class="input-group-text" id="searchIcon">
-                <fa-icon class="text-primary" [icon]="fa.faSearch"></fa-icon>
-            </span>
-            <input type="text" class="form-control" placeholder="Search character" aria-label="Search character"
-                aria-describedby="searchIcon" (keyup)="onSearch($event)" [disabled]="initialLoad">
-        </div>
-    </div>
-</div>
+<app-search (searchEvent)="onSearch($event)"></app-search>
 
 <!-- not found -->
-<div class="row" *ngIf="notFound">
-    <div class="col">
-        <p class="text-center text-muted text">Not Found</p>
-    </div>
-</div>
+<app-not-found [notFound]="notFound"></app-not-found>
 
 <!-- loader -->
-<div class="row" *ngIf="!characters.length && !notFound">
-    <div class="col">
-        <div class="text-center">
-            <div class="spinner-border text-primary" role="status">
-                <span class="visually-hidden">Loading...</span>
-            </div>
-        </div>
-    </div>
-</div>
+<app-loader [status]="!characters.length && !notFound"></app-loader>
 
 <!-- list -->
-<div class="row" infiniteScroll [infiniteScrollDistance]="2" [infiniteScrollThrottle]="50" (scrolled)="onScroll()">
-    <div *ngFor="let character of characters" class="col-6 col-sm-3 col-md-3 col-lg-2 mb-3">
-        <div class="card bg-dark text-white" (click)="onCharacterClick(character)">
-            <img [src]="getImage(character)" class="card-img">
-            <div class="card-img-overlay">
-                <h5 class="card-title">{{character.name}}</h5>
-            </div>
-        </div>
-    </div>
-</div>
+<app-list [items]="characters" (onScrollEvent)="onScroll()" (onItemClickEvent)="onCharacterClick($event)"></app-list>
 
 <!-- view -->
 <div class="offcanvas offcanvas-bottom" tabindex="-1" id="viewOffcanvas" aria-labelledby="viewOffcanvasLabel">
@@ -54,54 +23,20 @@
             <p [innerHtml]="character.description"></p>
 
             <!-- comics -->
-            <div class="mb-4" *ngIf="character.comics.items.length">
-                <h6>Comics <span class="badge bg-dark text-white float-end">{{character.comics.available}}</span></h6>
-                <ul class="list-group">
-                    <li *ngFor="let comic of character.comics.items" class="list-group-item">
-                        {{comic.name}}
-                    </li>
-                </ul>
-            </div>
+            <app-list-group title="Comics" [items]="character.comics.items"></app-list-group>
 
             <!-- series -->
-            <div class="mb-4" *ngIf="character.series.items.length">
-                <h6>Series <span class="badge bg-dark text-white float-end">{{character.series.available}}</span></h6>
-                <ul class="list-group">
-                    <li *ngFor="let s of character.series.items" class="list-group-item">
-                        {{s.name}}
-                    </li>
-                </ul>
-            </div>
+            <app-list-group title="Series" [items]="character.series.items"></app-list-group>
 
             <!-- stories -->
-            <div class="mb-4" *ngIf="character.stories.items.length">
-                <h6>Stories <span class="badge bg-dark text-white float-end">{{character.stories.available}}</span></h6>
-                <ul class="list-group">
-                    <li *ngFor="let story of character.stories.items" class="list-group-item">
-                        {{story.name}}
-                    </li>
-                </ul>
-            </div>
+            <app-list-group title="Stories" [items]="character.stories.items"></app-list-group>
 
             <!-- events -->
-            <div class="mb-4" *ngIf="character.events.items.length">
-                <h6>Events <span class="badge bg-dark text-white float-end">{{character.events.available}}</span></h6>
-                <ul class="list-group">
-                    <li *ngFor="let event of character.events.items" class="list-group-item">
-                        {{event.name}}
-                    </li>
-                </ul>
-            </div>
+            <app-list-group title="Events" [items]="character.events.items"></app-list-group>
 
             <!-- references -->
-            <div class="mb-4" *ngIf="character.urls.length">
-                <h6>References <span class="badge bg-dark text-white float-end">{{character.urls.length}}</span></h6>
-                <ul class="list-group">
-                    <a *ngFor="let url of character.urls" class="list-group-item" [href]="url.url" target="_blank">
-                        {{url.type | uppercase}}
-                    </a>
-                </ul>
-            </div>
+            <app-list-group title="References" key="type" link="url" [isLink]="true" [items]="character.urls"></app-list-group>
+
         </ng-container>
     </div>
 </div>

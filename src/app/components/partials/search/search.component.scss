@@ -1,0 +1,19 @@
+@import './../../../../assets/scss/variables.scss';
+
+.input-group {
+    .input-group-text {
+        background-color: #ddd;
+        border: none;
+        border-radius: $border-radius;
+    }
+    .input-group-text:first-child {
+        margin-right: 1px;
+        padding-right: 0;
+    }
+    .form-control {
+        background-color: #ddd;
+        border: none;
+        margin-left: 0px;
+        border-radius: $border-radius;
+    }
+}
