@@ -1,6 +1,10 @@
 /* You can add global styles to this file, and also import other style files */
 @import "./assets/scss/variables.scss";
 
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 600;
+}
+
 .card {
     cursor: pointer;
     border-radius: $border-radius;

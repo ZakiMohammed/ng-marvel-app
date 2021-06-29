@@ -2,7 +2,7 @@ import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { ImageVariant } from 'src/app/models/image.model';
 import { MarvelRequestOptions } from 'src/app/models/request.model';
 import { MarvelService } from 'src/app/services/marvel.service';
-import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import { faSearch, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { Observable, Subject } from 'rxjs';
 import { concatMap, debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 
@@ -20,8 +20,11 @@ export class CharacterListComponent implements OnInit, AfterViewInit {
   total = 0;
   notFound = false;
   initialLoad = true;
-  faSearch = faSearch;
-  offcanvas: any;
+  fa = {
+    faSearch: faSearch,
+    faTimes: faTimes,
+  };
+  offCanvas: any;
   options: MarvelRequestOptions = {
     limit: 50,
     offset: 0
@@ -36,11 +39,11 @@ export class CharacterListComponent implements OnInit, AfterViewInit {
     this.getCharacters(this.scroll$);
     this.searchCharacters(this.searchText$);
 
-    this.scroll$.next();
+    this.scroll$.next(0);
   }
 
   ngAfterViewInit(): void {
-    this.offcanvas = new bootstrap.Offcanvas(document.getElementById('viewOffcanvas'));
+    this.offCanvas = new bootstrap.Offcanvas(document.getElementById('viewOffcanvas'));
   }
 
   getImage(character: any) {
@@ -51,7 +54,10 @@ export class CharacterListComponent implements OnInit, AfterViewInit {
     scroll.pipe(
       debounceTime(400),
       distinctUntilChanged(),
-      concatMap(() => this.marvelService.getCharacters(this.options))).subscribe(data => {
+      concatMap(offset => {
+        this.options.offset = offset;
+        return this.marvelService.getCharacters(this.options);
+      })).subscribe(data => {
         this.characters = [...this.characters, ...data.results];
         this.total = data.total;
         this.options.offset = this.options.offset === 0 ? data.offset : this.options.offset;
@@ -72,9 +78,9 @@ export class CharacterListComponent implements OnInit, AfterViewInit {
   }
 
   onScroll() {
-    if (this.options.offset + this.options.limit < this.total) {
-      this.options.offset += this.options.limit;
-      this.scroll$.next(this.options.offset);
+    const offset = this.options.offset + this.options.limit;
+    if (offset < this.total) {
+      this.scroll$.next(offset);
     }
   }
 
@@ -98,8 +104,12 @@ export class CharacterListComponent implements OnInit, AfterViewInit {
 
   onCharacterClick(character: any) {
     this.character = character;
-    if (this.offcanvas) {
-      this.offcanvas.show();
+    if (this.offCanvas) {
+      const offCanvasBody = document.querySelector('.offcanvas-body');
+      if (offCanvasBody) {
+        offCanvasBody.scrollTop = 0;
+      }
+      this.offCanvas.show();
     }
   }
 
