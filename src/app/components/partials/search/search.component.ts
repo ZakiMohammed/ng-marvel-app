@@ -10,6 +10,7 @@ export class SearchComponent {
 
   faSearch = faSearch;
   
+  @Input() title: string = '';
   @Output() searchEvent = new EventEmitter();
 
   onSearch($event: any) {

@@ -1,0 +1,54 @@
+<!-- search -->
+<app-search title="stories" (searchEvent)="onSearch($event)"></app-search>
+
+<!-- not found -->
+<app-not-found [notFound]="notFound"></app-not-found>
+
+<!-- loader -->
+<app-loader [status]="!stories.length && !notFound"></app-loader>
+
+<!-- list -->
+<div class="row" infiniteScroll [infiniteScrollDistance]="2" [infiniteScrollThrottle]="50" (scrolled)="onScroll()">
+    <div class="col">
+        <ul class="list-group">
+            <li *ngFor="let story of stories" (click)="onClick(story)" class="list-group-item">
+                <h6>{{story.type | uppercase}} - {{story.id}}</h6>
+                {{story.title}}
+            </li>
+        </ul>
+    </div>
+</div>
+
+<!-- view -->
+<div class="modal" id="modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <img *ngIf="story && story.thumbnail" [src]="getImage(story)" class="img-fluid mx-auto d-block">
+            </div>
+            <div class="modal-body">
+                <ng-container *ngIf="story">
+                    <h1 class="text-primary">{{story.type | uppercase}} - {{story.id}}</h1>
+                    <p [innerHtml]="story.title"></p>
+        
+                    <!-- characters -->
+                    <app-list-group title="Characters" [items]="story.characters.items"></app-list-group>
+        
+                    <!-- creators -->
+                    <app-list-group title="Creators" [items]="story.creators.items"></app-list-group>
+        
+                    <!-- events -->
+                    <app-list-group title="Events" [items]="story.events.items"></app-list-group>
+        
+                    <!-- comics -->
+                    <app-list-group title="Comics" [items]="story.comics.items"></app-list-group>
+        
+                    <!-- series -->
+                    <app-list-group title="Series" [items]="story.series.items"></app-list-group>
+        
+                </ng-container>
+            </div>
+        </div>
+    </div>
+</div>

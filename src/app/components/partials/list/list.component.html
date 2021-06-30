@@ -3,7 +3,7 @@
         <div class="card bg-dark text-white" (click)="onItemClick(item)">
             <img [src]="getImage(item)" class="card-img">
             <div class="card-img-overlay">
-                <h5 class="card-title">{{item.name}}</h5>
+                <h5 class="card-title">{{item[key]}}</h5>
             </div>
         </div>
     </div>

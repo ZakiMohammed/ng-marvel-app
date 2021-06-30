@@ -1,0 +1,42 @@
+<!-- search -->
+<app-search title="series" (searchEvent)="onSearch($event)"></app-search>
+
+<!-- not found -->
+<app-not-found [notFound]="notFound"></app-not-found>
+
+<!-- loader -->
+<app-loader [status]="!series.length && !notFound"></app-loader>
+
+<!-- list -->
+<app-list [items]="series" key="title" [imageVariant]="imageVariant" (onScrollEvent)="onScroll()" (onItemClickEvent)="onClick($event)"></app-list>
+
+<!-- view -->
+<div class="modal" id="modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <img *ngIf="seriesSingle" [src]="getImage(seriesSingle)" class="img-fluid mx-auto d-block">
+            </div>
+            <div class="modal-body">
+                <ng-container *ngIf="seriesSingle">
+                    <h1 class="text-primary">{{seriesSingle.title}}</h1>
+                    <p [innerHtml]="seriesSingle.description"></p>
+        
+                    <!-- characters -->
+                    <app-list-group title="Characters" [items]="seriesSingle.characters.items"></app-list-group>
+        
+                    <!-- creators -->
+                    <app-list-group title="Creators" [items]="seriesSingle.creators.items"></app-list-group>
+        
+                    <!-- events -->
+                    <app-list-group title="Events" [items]="seriesSingle.events.items"></app-list-group>
+        
+                    <!-- comics -->
+                    <app-list-group title="Comics" [items]="seriesSingle.comics.items"></app-list-group>
+        
+                </ng-container>
+            </div>
+        </div>
+    </div>
+</div>

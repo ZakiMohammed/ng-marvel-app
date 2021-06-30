@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { ImageVariant } from 'src/app/models/image.model';
-import { MarvelRequestOptions } from 'src/app/models/request.model';
+import { Category, MarvelRequestOptions } from 'src/app/models/request.model';
 import { MarvelService } from 'src/app/services/marvel.service';
 import { Observable, Subject } from 'rxjs';
 import { concatMap, debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
@@ -8,17 +8,19 @@ import { concatMap, debounceTime, distinctUntilChanged, switchMap } from 'rxjs/o
 declare let bootstrap: any;
 
 @Component({
-  selector: 'app-character-list',
-  templateUrl: './character-list.component.html',
-  styleUrls: ['./character-list.component.scss']
+  selector: 'app-series',
+  templateUrl: './series.component.html',
+  styleUrls: ['./series.component.scss']
 })
-export class CharacterListComponent implements OnInit, AfterViewInit {
+export class SeriesComponent implements OnInit, AfterViewInit {
 
-  characters: any[] = [];
-  character: any;
+  category: Category = 'series';
+  imageVariant: ImageVariant = ImageVariant.portrait_uncanny;
+  series: any[] = [];
+  seriesSingle: any;
   total = 0;
   notFound = false;
-  offCanvas: any;
+  modal: any;
   options: MarvelRequestOptions = {
     limit: 50,
     offset: 0
@@ -30,35 +32,35 @@ export class CharacterListComponent implements OnInit, AfterViewInit {
   constructor(private marvelService: MarvelService) { }
 
   ngOnInit(): void {
-    this.getCharacters(this.scroll$);
-    this.searchCharacters(this.searchText$);
+    this.get(this.scroll$);
+    this.search(this.searchText$);
 
     this.scroll$.next(0);
   }
 
   ngAfterViewInit(): void {
-    this.offCanvas = new bootstrap.Offcanvas(document.getElementById('viewOffcanvas'));
+    this.modal = new bootstrap.Modal(document.getElementById('modal'));
   }
 
   getImage(character: any) {
-    return this.marvelService.getImage(character.thumbnail, ImageVariant.standard_xlarge);
+    return this.marvelService.getImage(character.thumbnail, this.imageVariant);
   }
 
-  getCharacters(scroll: Observable<number>) {
+  get(scroll: Observable<number>) {
     scroll.pipe(
       debounceTime(400),
       distinctUntilChanged(),
       concatMap(offset => {
         this.options.offset = offset;
-        return this.marvelService.getCharacters(this.options);
+        return this.marvelService.getData(this.category, this.options);
       })).subscribe(data => this.handleResponse(data));
   }
 
-  searchCharacters(text: Observable<string>) {
+  search(text: Observable<string>) {
     text.pipe(
       debounceTime(400),
       distinctUntilChanged(),
-      switchMap(() => this.marvelService.getCharacters(this.options))).subscribe(data => this.handleResponse(data, true));
+      switchMap(() => this.marvelService.getData(this.category, this.options))).subscribe(data => this.handleResponse(data, true));
   }
 
   onScroll() {
@@ -69,35 +71,31 @@ export class CharacterListComponent implements OnInit, AfterViewInit {
   }
 
   onSearch(searchText: string) {
-    if (searchText !== this.options.nameStartsWith) {
+    if (searchText !== this.options.titleStartsWith) {
       if (searchText) {
-        this.options.nameStartsWith = searchText;
+        this.options.titleStartsWith = searchText;
       } else {
         this.options = {
           limit: 50,
           offset: 0
         };
       }
-      this.characters = [];
+      this.series = [];
       this.total = 0;
       this.notFound = false;
       this.searchText$.next(searchText);
     }
   }
 
-  onCharacterClick(character: any) {
-    this.character = character;
-    if (this.offCanvas) {
-      const offCanvasBody = document.querySelector('.offcanvas-body');
-      if (offCanvasBody) {
-        offCanvasBody.scrollTop = 0;
-      }
-      this.offCanvas.show();
+  onClick(character: any) {
+    this.seriesSingle = character;
+    if (this.modal) {
+      this.modal.show();
     }
   }
 
   handleResponse(data: any, reset: boolean = false) {
-    this.characters = reset ? data.results : [...this.characters, ...data.results];
+    this.series = reset ? data.results : [...this.series, ...data.results];
     this.total = data.total;
     this.options.offset = this.options.offset || data.offset;
     this.notFound = !!!data.results.length;

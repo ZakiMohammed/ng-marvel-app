@@ -10,13 +10,15 @@ import { MarvelService } from 'src/app/services/marvel.service';
 export class ListComponent {
 
   @Input() items: any[] = [];
+  @Input() key: string = 'name';
+  @Input() imageVariant: ImageVariant = ImageVariant.standard_xlarge;
   @Output() onScrollEvent = new EventEmitter();
   @Output() onItemClickEvent = new EventEmitter();
 
   constructor(private marvelService: MarvelService) { }
 
-  getImage(character: any) {
-    return this.marvelService.getImage(character.thumbnail, ImageVariant.standard_xlarge);
+  getImage(item: any) {
+    return item.thumbnail && this.marvelService.getImage(item.thumbnail, this.imageVariant);
   }
 
   onScroll() {

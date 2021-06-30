@@ -5,6 +5,13 @@ h1, h2, h3, h4, h5, h6 {
     font-weight: 600;
 }
 
+.display-1 {
+    font-size: calc(1.925rem + 4.5vw);
+}
+.nav-link {
+    text-align: center;
+}
+
 .card {
     cursor: pointer;
     border-radius: $border-radius;
@@ -44,6 +51,89 @@ h1, h2, h3, h4, h5, h6 {
     &:hover {
         .card-img {
             transform: scale(1.25);
+        }
+    }
+}
+
+.modal {
+    transition: transform .1s ease-in-out;
+    transform: translateY(100%);
+
+    &.show {
+        transform: none;
+    }
+
+    .btn-close {
+        position: absolute;
+        right: 15px;
+        top: 15px;
+        opacity: 1;
+    }
+
+    .modal-dialog {
+        margin: 0;
+        margin-top: 200px;
+        width: 100%;
+        max-width: none;
+
+        .modal-content {
+            border-radius: $border-radius;
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
+
+            .modal-header {
+                padding: 0;
+                border: none;
+            }
+
+            img {
+                margin-top: -150px;
+                border-radius: $border-radius;
+            }
+            img.portrait {
+                margin-top: -230px;
+            }
+
+            @media (max-width: 768px) {
+                img.portrait {
+                    margin-top: -180px;
+                    width: 200px;
+                }
+            }
+        }
+    }
+}
+
+.offcanvas-bottom {
+    height: 70vh;
+    border-radius: $border-radius;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+
+    .offcanvas-header {
+        padding: 0;
+    }
+    .offcanvas-body {
+        margin-top: 1rem;
+        padding-top: 0;
+    }
+    img {
+        margin-top: -150px;
+        border-radius: $border-radius;
+    }
+    img.portrait {
+        margin-top: -230px;
+    }
+    .btn-close {
+        position: absolute;
+        right: 15px;
+        top: 15px;
+    }
+
+    @media (max-width: 768px) {
+        img.portrait {
+            margin-top: -180px;
+            width: 200px;
         }
     }
 }
