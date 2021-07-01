@@ -11,7 +11,7 @@ export class ListComponent {
 
   @Input() items: any[] = [];
   @Input() key: string = 'name';
-  @Input() imageVariant: ImageVariant = ImageVariant.standard_xlarge;
+  @Input() imageVariant: ImageVariant = ImageVariant.standard_fantastic;
   @Output() onScrollEvent = new EventEmitter();
   @Output() onItemClickEvent = new EventEmitter();
 

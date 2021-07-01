@@ -75,11 +75,13 @@ h1, h2, h3, h4, h5, h6 {
         margin-top: 200px;
         width: 100%;
         max-width: none;
+        min-height: 600px;
 
         .modal-content {
             border-radius: $border-radius;
             border-bottom-left-radius: 0;
             border-bottom-right-radius: 0;
+            min-height: 600px;
 
             .modal-header {
                 padding: 0;

@@ -21,10 +21,7 @@ export class EventsComponent implements OnInit, AfterViewInit {
   total = 0;
   notFound = false;
   modal: any;
-  options: MarvelRequestOptions = {
-    limit: 50,
-    offset: 0
-  };
+  options!: MarvelRequestOptions
 
   searchText$ = new Subject<string>();
   scroll$ = new Subject<number>();
@@ -32,6 +29,11 @@ export class EventsComponent implements OnInit, AfterViewInit {
   constructor(private marvelService: MarvelService) { }
 
   ngOnInit(): void {
+    this.options = {
+      limit: 50,
+      offset: 0
+    };
+
     this.get(this.scroll$);
     this.search(this.searchText$);
 
@@ -73,7 +75,11 @@ export class EventsComponent implements OnInit, AfterViewInit {
   onSearch(searchText: string) {
     if (searchText !== this.options.titleStartsWith) {
       if (searchText) {
-        this.options.titleStartsWith = searchText;
+        this.options = {
+          limit: 50,
+          offset: 0,
+          titleStartsWith: searchText
+        };
       } else {
         this.options = {
           limit: 50,

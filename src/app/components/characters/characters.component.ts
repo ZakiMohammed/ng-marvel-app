@@ -20,10 +20,7 @@ export class CharactersComponent implements OnInit, AfterViewInit {
   total = 0;
   notFound = false;
   modal: any;
-  options: MarvelRequestOptions = {
-    limit: 50,
-    offset: 0
-  };
+  options!: MarvelRequestOptions;
 
   searchText$ = new Subject<string>();
   scroll$ = new Subject<number>();
@@ -31,6 +28,11 @@ export class CharactersComponent implements OnInit, AfterViewInit {
   constructor(private marvelService: MarvelService) { }
 
   ngOnInit(): void {
+    this.options = {
+      limit: 50,
+      offset: 0
+    };
+
     this.getCharacters(this.scroll$);
     this.searchCharacters(this.searchText$);
 
@@ -72,7 +74,11 @@ export class CharactersComponent implements OnInit, AfterViewInit {
   onSearch(searchText: string) {
     if (searchText !== this.options.nameStartsWith) {
       if (searchText) {
-        this.options.nameStartsWith = searchText;
+        this.options = {
+          limit: 50,
+          offset: 0,
+          nameStartsWith: searchText
+        };
       } else {
         this.options = {
           limit: 50,

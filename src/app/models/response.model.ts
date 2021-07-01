@@ -15,3 +15,12 @@ export interface MarvelData {
     results: any[];
     total: number;
 }
+
+export interface MarvelCache {
+    characters?: MarvelData;
+    comics?: MarvelData;
+    creators?: MarvelData;
+    events?: MarvelData;
+    series?: MarvelData;
+    stories?: MarvelData;
+}
