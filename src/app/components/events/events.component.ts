@@ -34,8 +34,8 @@ export class EventsComponent implements OnInit, AfterViewInit {
       offset: 0
     };
 
-    this.get(this.scroll$);
-    this.search(this.searchText$);
+    this.get();
+    this.search();
 
     this.scroll$.next(0);
   }
@@ -48,8 +48,8 @@ export class EventsComponent implements OnInit, AfterViewInit {
     return this.marvelService.getImage(character.thumbnail, this.imageVariant);
   }
 
-  get(scroll: Observable<number>) {
-    scroll.pipe(
+  get() {
+    this.scroll$.pipe(
       debounceTime(400),
       distinctUntilChanged(),
       concatMap(offset => {
@@ -58,8 +58,8 @@ export class EventsComponent implements OnInit, AfterViewInit {
       })).subscribe(data => this.handleResponse(data));
   }
 
-  search(text: Observable<string>) {
-    text.pipe(
+  search() {
+    this.searchText$.pipe(
       debounceTime(400),
       distinctUntilChanged(),
       switchMap(() => this.marvelService.getData(this.category, this.options))).subscribe(data => this.handleResponse(data, true));

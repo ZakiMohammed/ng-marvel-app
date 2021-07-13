@@ -2,7 +2,7 @@ import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { ImageVariant } from 'src/app/models/image.model';
 import { Category, MarvelRequestOptions } from 'src/app/models/request.model';
 import { MarvelService } from 'src/app/services/marvel.service';
-import { Observable, Subject } from 'rxjs';
+import { Subject } from 'rxjs';
 import { concatMap, debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 
 declare let bootstrap: any;
@@ -33,8 +33,8 @@ export class CharactersComponent implements OnInit, AfterViewInit {
       offset: 0
     };
 
-    this.getCharacters(this.scroll$);
-    this.searchCharacters(this.searchText$);
+    this.get();
+    this.search();
 
     this.scroll$.next(0);
   }
@@ -47,8 +47,8 @@ export class CharactersComponent implements OnInit, AfterViewInit {
     return this.marvelService.getImage(character.thumbnail, ImageVariant.standard_fantastic);
   }
 
-  getCharacters(scroll: Observable<number>) {
-    scroll.pipe(
+  get() {
+    this.scroll$.pipe(
       debounceTime(400),
       distinctUntilChanged(),
       concatMap(offset => {
@@ -57,8 +57,8 @@ export class CharactersComponent implements OnInit, AfterViewInit {
       })).subscribe(data => this.handleResponse(data));
   }
 
-  searchCharacters(text: Observable<string>) {
-    text.pipe(
+  search() {
+    this.searchText$.pipe(
       debounceTime(400),
       distinctUntilChanged(),
       switchMap(() => this.marvelService.getData(this.category, this.options))).subscribe(data => this.handleResponse(data, true));
