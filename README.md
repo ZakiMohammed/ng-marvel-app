@@ -1,12 +1,12 @@
-# Marvel Guide using Angular and Bootstrap/Bootswatch 5 with MarvelAPI
+# NgMarvel app using Angular and Marvel API
 
 Creating a fun Marvel Guide App with the help of MarvelAPI, Angular, Bootstrap and Bootswatch.
 
 Check out the CodeOmelet blog post for this project.
 
-Demo: 
+Demo: https://ng-marvel-app.netlify.app
 
-Link: 
+Link: https://codeomelet.com/posts/ngmarvel-app-using-angular-and-marvel-api
 
 API in use:
 ```
